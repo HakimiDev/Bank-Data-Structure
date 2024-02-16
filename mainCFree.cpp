@@ -1,66 +1,42 @@
 #include <iostream>
 #include <string>
 
-// By Shadi AL-Hakimi - AI
-
 using namespace std;
 
-const string nodeName = "Bank Account";
+const string nodeName = " Bank Account ";
 
 struct Data {
-    string accountNumber = "", username = "";
-    double balance = 0.0;
+    string accountNumber, username;
+    double balance;
 };
 
 struct Node {
-    Node *prev = nullptr, *next = nullptr;
+    Node *prev, *next;
     Data data;
 };
 
 typedef Node *nodePtr;
 
-template<typename... Args>
-void print (Args... args) {
-    ((cout << args << " "), ...);
-    cout << "\033[0m"; // Reset color
-    cout << endl;
-};
-
-template<typename T>
-T input (string msg) {
-    T in;
-    cout << msg;
-    cin >> in;
-
-    return in;
-};
-
-template<typename... Args>
-void printSuccess (Args... args) {
-    print("\033[1;32m", args...); // Set color to bright green
-};
-
-template<typename... Args>
-void printError (Args... args) {
-    print("\033[1;31m", args...); // Set color to bright red
-};
-
-template<typename... Args>
-void printWarning (Args... args) {
-    print("\033[1;33m", args...); // Set color to bright yellow
-};
-
 nodePtr createNode () {
-    string accountNumber = input<string>("Enter the account number: ");
-    string username = input<string>("Enter the account username: ");
+    string accountNumber;
+    string username;
+    
+    cout << "Enter the account number: ";
+    cin >> accountNumber;
+
+    cout << "Enter the account username: ";
+    cin >> username;
 
     nodePtr node = new Node;
     Data data = {
-        accountNumber: accountNumber,
-        username: username,
+        accountNumber,
+        username,
         balance: 0.0
     };
+
     node->data = data;
+    node->prev = NULL;
+    node->next = NULL;
 
     return node;
 };
@@ -74,7 +50,7 @@ void unShift (nodePtr &firstNode) {
         firstNode = newNode;
     }
 
-    printSuccess("The", nodeName, "Is Successfully Added!");
+    cout << "The" << nodeName << "Is Successfully Added!" << endl;
 };
 
 void push (nodePtr &firstNode) {
@@ -90,7 +66,7 @@ void push (nodePtr &firstNode) {
         node->next = newNode;
     }
 
-    printSuccess("The", nodeName, "Is Successfully Added!");
+    cout << "The" << nodeName << "Is Successfully Added!" << endl;
 };
 
 void pushMiddle (nodePtr &firstNode, int nodeNumber) {
@@ -111,23 +87,23 @@ void pushMiddle (nodePtr &firstNode, int nodeNumber) {
         node->next = newNode;
     }
 
-    printSuccess("The", nodeName, "Is Successfully Added!");
+    cout << "The" << nodeName << "Is Successfully Added!" << endl;
 };
 
 void shift (nodePtr &firstNode) {
-    if (firstNode == NULL) printError("The LinkedList Is Empty!");
+    if (firstNode == NULL) cout << "The LinkedList Is Empty!" << endl;
     else {
         nodePtr node = firstNode; 
         firstNode = firstNode->next;
         if (firstNode != NULL) firstNode->prev = NULL;
 
-        printSuccess("The", nodeName, "Is Successfully Deleted!");
+        cout << "The" << nodeName << "Is Successfully Deleted!" << endl;
         delete node;
     }
 };
 
 void pop (nodePtr &firstNode) {
-    if (firstNode == NULL) printError("The LinkedList Is Empty!");
+    if (firstNode == NULL) cout << "The LinkedList Is Empty!" << endl;
     else {
         nodePtr node = firstNode; 
         while (node->next != NULL) {
@@ -137,13 +113,13 @@ void pop (nodePtr &firstNode) {
         if (node->prev != NULL) node->prev->next = NULL;
         else firstNode = NULL;
 
-        printSuccess("The", nodeName, "Is Successfully Deleted!");
+        cout << "The" << nodeName << "Is Successfully Deleted!" << endl;
         delete node;
     }
 };
 
 void popOne (nodePtr &firstNode, int nodeNumber) { // If the 'nodeNumber' is not exist then its gonna delete the last node.
-    if (firstNode == NULL) printError("The LinkedList Is Empty!");
+    if (firstNode == NULL) cout << "The LinkedList Is Empty!" << endl;
     else {
         int counter = 1;
 
@@ -161,7 +137,7 @@ void popOne (nodePtr &firstNode, int nodeNumber) { // If the 'nodeNumber' is not
             if (node->prev == NULL) firstNode = node->next;
         }
 
-        printSuccess("The", nodeName, "Is Successfully Deleted!");
+        cout << "The" << nodeName << "Is Successfully Deleted!" << endl;
         delete node;
     }
 };
@@ -175,22 +151,6 @@ nodePtr getNodeByIndex (nodePtr &firstNode, int index) { // Index start form 1
     }
 
     return index == counter ? node : NULL;
-};
-
-int getIndexByAccountNumber (nodePtr &firstNode, string accountNumber) { // -- Unused Function --
-    int index = -1, counter = 1;
-    nodePtr node = firstNode;        
-    while (node != NULL) {
-        if (node->data.accountNumber == accountNumber) {
-            index = counter;
-            break;
-        }
-
-        node = node->next;
-        counter++;
-    }
-
-    return index;
 };
 
 int getIndexByUsername (nodePtr &firstNode, string username) {
@@ -209,86 +169,111 @@ int getIndexByUsername (nodePtr &firstNode, string username) {
     return index;
 };
 
-void addBalance (nodePtr &firstNode) {
-    string username = input<string>("Enter the username of user: ");
+void addBalance (nodePtr& firstNode) {
+    cout << "Enter the username of the user: ";
+    string username;
+    cin >> username;
+
     int index = getIndexByUsername(firstNode, username);
-    if (index == -1) printError("This Username Is Not Found!");
+    if (index == -1)
+        cout << "This Username Is Not Found!" << endl;
     else {
         nodePtr node = getNodeByIndex(firstNode, index);
-        double amount = input<double>("Enter the amount: ");
+        cout << "Enter the amount: ";
+        double amount;
+        cin >> amount;
+
         if (amount <= 0) {
-            printError("You Should Enter A Number Greater Than Zero!");
+            cout << "You Should Enter A Number Greater Than Zero!" << endl;
         } else {
             node->data.balance += amount;
-            printSuccess("Balance Successfully Added!");
+            cout << "Balance Successfully Added!" << endl;
         }
     }
 };
 
-void withdrawMoney (nodePtr &firstNode) {
-    string username = input<string>("Enter the username of user: ");
+void withdrawMoney (nodePtr& firstNode) {
+    cout << "Enter the username of the user: ";
+    string username;
+    cin >> username;
+
     int index = getIndexByUsername(firstNode, username);
-    if (index == -1) printError("This Username Is Not Found!");
+    if (index == -1)
+        cout << "This Username Is Not Found!" << endl;
     else {
         nodePtr node = getNodeByIndex(firstNode, index);
-        double amount = input<double>("Enter the amount: ");
+        cout << "Enter the amount: ";
+        double amount;
+        cin >> amount;
+
         if (amount <= 0) {
-            printError("You Should Enter A Number Greater Than Zero!");
+            cout << "You Should Enter A Number Greater Than Zero!" << endl;
         } else {
             if (amount > node->data.balance) {
-                printError("You Don't Have Enough Balance ):");
+                cout << "You Don't Have Enough Balance :(" << endl;
             } else {
                 node->data.balance -= amount;
-                printSuccess("Thanks For Using Our Bank!");
-                printWarning("Your Current Balance Is:", node->data.balance);
+                cout << "Thanks For Using Our Bank!" << endl;
+                cout << "Your Current Balance Is: " << node->data.balance << endl;
             }
         }
     }
 };
 
-void transferMoney (nodePtr &firstNode) {
-    string username1 = input<string>("Enter the username of user number one: ");
+void transferMoney (nodePtr& firstNode) {
+    cout << "Enter the username of user number one: ";
+    string username1;
+    cin >> username1;
+
     int index1 = getIndexByUsername(firstNode, username1);
-    if (index1 == -1) { 
-        printError("This Username Is Not Found!");
+    if (index1 == -1) {
+        cout << "This Username Is Not Found!" << endl;
         return;
     }
-    string username2 = input<string>("Enter the username of user number two: ");
+
+    cout << "Enter the username of user number two: ";
+    string username2;
+    cin >> username2;
+
     int index2 = getIndexByUsername(firstNode, username2);
     if (index2 == -1) {
-        printError("This Username Is Not Found!");
+        cout << "This Username Is Not Found!" << endl;
         return;
     }
 
     nodePtr node1 = getNodeByIndex(firstNode, index1);
     nodePtr node2 = getNodeByIndex(firstNode, index2);
-    double amount = input<double>("Enter the amount: ");
+
+    cout << "Enter the amount: ";
+    double amount;
+    cin >> amount;
+
     if (amount <= 0) {
-        printError("You Should Enter A Number Greater Than Zero!");
+        cout << "You Should Enter A Number Greater Than Zero!" << endl;
     } else {
         if (amount > node1->data.balance) {
-            printError("You Don't Have Enough Balance ):");
+            cout << "You Don't Have Enough Balance :(" << endl;
         } else {
             node1->data.balance -= amount;
             node2->data.balance += amount;
 
-            printSuccess("Thanks For Using Our Bank!");
-            printWarning("Your Current Balance Is:", node1->data.balance);
+            cout << "Thanks For Using Our Bank!" << endl;
+            cout << "Your Current Balance Is: " << node1->data.balance << endl;
         }
     }
 };
 
-void showNodeData (nodePtr &node) {
+void showNodeData (nodePtr& node) {
     if (node == NULL) return;
     Data data = node->data;
-    print("\tAccount Number: \033[1;33m", data.accountNumber);
-    print("\tAccount Username: \033[1;33m", data.username);
-    print("\tAccount Balance: \033[1;33m", data.balance);
-    print("\t--------------------------------");
+    cout << "\tAccount Number: " << data.accountNumber << endl;
+    cout << "\tAccount Username: " << data.username << endl;
+    cout << "\tAccount Balance: " << data.balance << endl;
+    cout << "\t--------------------------------" << endl;
 };
 
-void displayNodes (nodePtr &firstNode) {
-    if (firstNode == NULL) printError("The LinkedList Is Empty!");
+void displayNodes (nodePtr& firstNode) {
+    if (firstNode == NULL) cout << "The LinkedList Is Empty!" << endl;
     else {
         nodePtr node = firstNode;
         while (node != NULL) {
@@ -299,54 +284,58 @@ void displayNodes (nodePtr &firstNode) {
 };
 
 void displayMainMenu () {
-    print("---------------------------");
-    printSuccess("1 -> Create Account");
-    printError("2 -> Delete Account");
-    printSuccess("3 -> Show Accounts");
-    printWarning("4 -> More Options");
-    print("\n \033[0;31m5 -> Exit Program");
-    print("---------------------------");
+    cout << "---------------------------" << endl;
+    cout << "1 -> Create Account" << endl;
+    cout << "2 -> Delete Account" << endl;
+    cout << "3 -> Show Accounts" << endl;
+    cout << "4 -> More Options" << endl;
+    cout << endl << "5 -> Exit Program" << endl;
+    cout << "---------------------------" << endl;
 };
 
 void displayAddMenu () {
-    print("---------------------------");
-    printSuccess("1 -> Add Account From The Begin");
-    printSuccess("2 -> Add Account From The Last");
-    printSuccess("3 -> Add Account From The Middle");
-    print("---------------------------");
+    cout << "---------------------------" << endl;
+    cout << "1 -> Add Account From The Begin" << endl;
+    cout << "2 -> Add Account From The Last" << endl;
+    cout << "3 -> Add Account From The Middle" << endl;
+    cout << "---------------------------" << endl;
 };
 
 void displayDeleteMenu () {
-    print("---------------------------");
-    printError("1 -> Delete Account From The Begin");
-    printError("2 -> Delete Account From The Last");
-    printError("3 -> Delete Account From The Middle");
-    print("---------------------------");
+    cout << "---------------------------" << endl;
+    cout << "1 -> Delete Account From The Begin" << endl;
+    cout << "2 -> Delete Account From The Last" << endl;
+    cout << "3 -> Delete Account From The Middle" << endl;
+    cout << "---------------------------" << endl;
 };
 
 void displayOptionsMenu () {
-    print("---------------------------");
-    printSuccess("1 -> Add Balance");
-    printError("2 -> Withdraw Money");
-    printWarning("3 -> Transfer");
-    print("---------------------------");
+    cout << "---------------------------" << endl;
+    cout << "1 -> Add Balance" << endl;
+    cout << "2 -> Withdraw Money" << endl;
+    cout << "3 -> Transfer" << endl;
+    cout << "---------------------------" << endl;
 };
 
 int main () {
-    nodePtr firstNode = nullptr;
+    nodePtr firstNode = NULL;
 
-    print("--- \033[1;32mWelcome To Our \033[1;33mBank\033[0m ---");
+    cout << "--- Welcome To Our Bank ---" << endl;
 
     char choice;
     int choice2;
     while (true) {
         displayMainMenu();
 
-        choice = input<char>("Choose: ");
+        cout << "Choose: ";
+        cin >> choice;
+
         switch (choice) {
             case '1':
                 displayAddMenu();
-                choice = input<char>("Choose: ");
+                cout << "Choose: ";
+                cin >> choice;
+
                 switch (choice) {
                     case '1':
                         unShift(firstNode);
@@ -355,14 +344,17 @@ int main () {
                         push(firstNode);
                         break;
                     case '3':
-                        choice2 = input<int>("Enter the node number that you want to push after it: ");
+                        cout << "Enter the node number that you want to push after it: ";
+                        cin >> choice2;
                         pushMiddle(firstNode, choice2);
                         break;
                 }
                 break;
             case '2':
                 displayDeleteMenu();
-                choice = input<char>("Choose: ");
+                cout << "Choose: ";
+                cin >> choice;
+
                 switch (choice) {
                     case '1':
                         shift(firstNode);
@@ -371,7 +363,8 @@ int main () {
                         pop(firstNode);
                         break;
                     case '3':
-                        choice2 = input<int>("Enter the node number that you want to delete: ");
+                        cout << "Enter the node number that you want to delete: ";
+                        cin >> choice2;
                         popOne(firstNode, choice2);
                         break;
                 }
@@ -381,7 +374,9 @@ int main () {
                 break;
             case '4':
                 displayOptionsMenu();
-                choice = input<char>("Choose: ");
+                cout << "Choose: ";
+                cin >> choice;
+
                 switch (choice) {
                     case '1':
                         addBalance(firstNode);
@@ -395,11 +390,11 @@ int main () {
                 }
                 break;
             case '5':
-                printWarning("Good Bye (:");
+                cout << "Good Bye (:" << endl;
                 exit(0);
                 break;
             default:
-                printWarning("Invalid choice!");
+                cout << "Invalid choice!" << endl;
                 break;
         }
     }
